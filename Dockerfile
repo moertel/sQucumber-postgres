@@ -1,0 +1,11 @@
+FROM ruby:2.3.0
+
+COPY ./squcumber-postgres.gemspec squcumber-postgres.gemspec
+COPY ./Gemfile Gemfile
+COPY ./Rakefile Rakefile
+RUN bundle install
+
+COPY ./spec spec
+COPY ./lib lib
+
+CMD ["bundle", "exec", "rspec"]
