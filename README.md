@@ -106,8 +106,8 @@ Optional environment variables:
 
 
 ## Available Steps
-### `Given the SQL files in the path "path/to/sql"`
-  * Allows to add the path to SQL scripts that need to be executed to produce the result set<br/>
+### `Given the SQL files in the path "{path}"`
+  * Allows to add the `path` to SQL scripts that need to be executed to produce the result set<br/>
     Path can be either relative to the project root or absolute<br/>
     Files are executed in the order they are given, using `When the given SQL files are executed`<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
@@ -128,11 +128,11 @@ Optional environment variables:
 
 ---
 
-### `Given the SQL file path "path/to/sql"`
-  * Allows to add the path to SQL scripts that need to be executed during the steps<br/>
+### `Given the SQL file path "{path}"`
+  * Allows to add the `path` to SQL scripts that need to be executed during the steps<br/>
     Path can be either relative to the project root or absolute<br/>
-    Works the same as `Given the SQL files in the path "path/to/sql"` but doesn't take a list of queries<br/>
-    Scripts can be executed on a per-file basis using `When the SQL file "some_file.sql" is executed`<br/><br/>
+    Works the same as `Given the SQL files in the path "{path}"` but doesn't take a list of queries<br/>
+    Scripts can be executed on a per-file basis using `When the SQL file "{file}" is executed`<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     For the path `project/src/sql`:
@@ -272,6 +272,8 @@ Optional environment variables:
     </p>
     </details>
 
+---
+
 ### `When the SQL file "{file_name}" is executed`
   * Executes the given file at `{file_name}`. This can be an absolute file path or relative to the project root. If a path has been specified in the `Given the SQL file path {path}` step, it will be respected.<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
@@ -281,6 +283,8 @@ Optional environment variables:
     </p>
     </details>
 
+---
+
 ### `When the resulting table "{schema_and_table}" is queried`
   * Fetches the contents of the table specified in `{schema_and_table}`. Note that the result is not necessarily ordered, so in case you expect more than one row and want to compare that a table matches _exactly_, consider ordering the result with the `When the resulting table "{schema_and_table}" is queried, ordered by "{column_name}"` step.<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
@@ -289,6 +293,8 @@ Optional environment variables:
     ```
     </p>
     </details>
+
+---
 
 ### `When the resulting table "{schema_and_table}" is queried, ordered by "{column_name}"`
   * Fetches the contents of the table specified in `{schema_and_table}` and orders the result by the `{column_name}` given. This is useful when the result is expected to match _exactly_ a particular result because rows will in this case be compared one by one in the given order.<br/>
