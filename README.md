@@ -4,6 +4,12 @@
 
 Bring the BDD approach to writing SQL for your Postgres instance and be confident that your scripts do what they're supposed to do. Define and execute SQL unit, acceptance and integration tests and let them serve as a living documentation for your queries. It's Cucumber - for SQL!
 
+ * [Example](#example)
+ * [Installation](#installation)
+ * [Usage](#usage)
+   * [Environment variables](#environment-variables)
+ * [Step definitions](#available-steps)
+
 ## Example
 
 Suppose you want to test that `kpi_reporting.sql` is producing correct results; its `.feature` file could look as follows:
@@ -109,7 +115,7 @@ Optional environment variables:
 ### `Given the SQL files in the path "{path}"`
   * Allows to add the `path` to SQL scripts that need to be executed to produce the result set<br/>
     Path can be either relative to the project root or absolute<br/>
-    Files are executed in the order they are given, using `When the given SQL files are executed`<br/>
+    Files are executed in the order they are given, using [`When the given SQL files are executed`](#when-the-given-sql-files-are-executed)<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     For the files `project/src/sql/some_query.sql` and `project/src/sql/some_query.sql`:
@@ -131,8 +137,8 @@ Optional environment variables:
 ### `Given the SQL file path "{path}"`
   * Allows to add the `path` to SQL scripts that need to be executed during the steps<br/>
     Path can be either relative to the project root or absolute<br/>
-    Works the same as `Given the SQL files in the path "{path}"` but doesn't take a list of queries<br/>
-    Scripts can be executed on a per-file basis using `When the SQL file "{file}" is executed`<br/>
+    Works the same as [`Given the SQL files in the path "{path}"`](#given-the-sql-files-in-the-path-path) but doesn't take a list of queries<br/>
+    Scripts can be executed on a per-file basis using [`When the SQL file "{file}" is executed`](#when-the-sql-file-file_name-is-executed)<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     For the path `project/src/sql`:
@@ -151,7 +157,7 @@ Optional environment variables:
 ---
 
 ### `Given their table dependencies`
-  * Tables used by the SQL script(s). As the testing framework operates on a new, empty database, this makes sure that all dependencies are present upon script execution. Initially, tables defined here will be empty. You can add data to them by using the step `Given the existing table "some_schema.some_table"`<br/>
+  * Tables used by the SQL script(s). As the testing framework operates on a new, empty database, this makes sure that all dependencies are present upon script execution. Initially, tables defined here will be empty. You can add data to them by using the step [`Given the existing table "{schema_and_table}"`](#given-the-existing-table-schema_and_table)<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     ```cucumber
@@ -173,7 +179,7 @@ Optional environment variables:
 ---
 
 ### `Given their schema dependencies`
-  * Schemas used by the SQL scripts if not already specified by the step `Given their table dependencies`. This step usually makes sense if your script wants to write data to an own schema.<br/>
+  * Schemas used by the SQL scripts if not already specified by the step [`Given their table dependencies`](#given-their-table-dependencies). This step usually makes sense if your script wants to write data to an own schema.<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     ```cucumber
@@ -264,7 +270,7 @@ Optional environment variables:
 ---
 
 ### `When the given SQL files are executed`
-  * Takes all files provided in the `Given the SQL files in the path "{path}" step and executes them in the specified order.`<br/>
+  * Takes all files provided in the [`Given the SQL files in the path "{path}"`](#given-the-sql-files-in-the-path-path) step and executes them in the specified order.<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     ```cucumber
@@ -275,7 +281,7 @@ Optional environment variables:
 ---
 
 ### `When the SQL file "{file_name}" is executed`
-  * Executes the given file at `{file_name}`. This can be an absolute file path or relative to the project root. If a path has been specified in the `Given the SQL file path {path}` step, it will be respected.<br/>
+  * Executes the given file at `{file_name}`. This can be an absolute file path or relative to the project root. If a path has been specified in the [`Given the SQL file path {path}`](#given-the-sql-file-path-path) step, it will be respected.<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     ```cucumber
@@ -286,7 +292,7 @@ Optional environment variables:
 ---
 
 ### `When the resulting table "{schema_and_table}" is queried`
-  * Fetches the contents of the table specified in `{schema_and_table}`. Note that the result is not necessarily ordered, so in case you expect more than one row and want to compare that a table matches _exactly_, consider ordering the result with the `When the resulting table "{schema_and_table}" is queried, ordered by "{column_name}"` step.<br/>
+  * Fetches the contents of the table specified in `{schema_and_table}`. Note that the result is not necessarily ordered, so in case you expect more than one row and want to compare that a table matches _exactly_, consider ordering the result with the [`When the resulting table "{schema_and_table}" is queried, ordered by "{column_name}"`](#when-the-resulting-table-schema_and_table-is-queried-ordered-by-column_name) step.<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     ```cucumber
@@ -308,7 +314,7 @@ Optional environment variables:
 ---
 
 ### `Then the result starts with`
-  * Checks the results of the `When the resulting table "{schema_and_table}" is queried` step and compares only the first row. An optional explanation can be added at the end, to make clear what is expected in the result.<br/>
+  * Checks the results of the [`When the resulting table "{schema_and_table}" is queried`](#when-the-resulting-table-schema_and_table-is-queried) step and compares only the first row. An optional explanation can be added at the end, to make clear what is expected in the result.<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     ```cucumber
@@ -319,7 +325,7 @@ Optional environment variables:
 ---
 
 ### `Then the result includes`
-  * Checks the results of the `When the resulting table "{schema_and_table}" is queried` step and makes sure the given expected rows do occur in the actual result, in any order. An optional explanation can be added at the end to clarify what is expected in the result.<br/>
+  * Checks the results of the [`When the resulting table "{schema_and_table}" is queried`](#when-the-resulting-table-schema_and_table-is-queried) step and makes sure the given expected rows do occur in the actual result, in any order. An optional explanation can be added at the end to clarify what is expected in the result.<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     ```cucumber
@@ -330,7 +336,7 @@ Optional environment variables:
 ---
 
 ### `The result does not include`
-  * Checks the results of the `When the resulting table "{schema_and_table}" is queried` step and makes sure the given rows do not occur in the actual result. An optional explanation can be added at the end to clarify what is expected in the result.<br/>
+  * Checks the results of the [`When the resulting table "{schema_and_table}" is queried`](#when-the-resulting-table-schema_and_table-is-queried) step and makes sure the given rows do not occur in the actual result. An optional explanation can be added at the end to clarify what is expected in the result.<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     ```cucumber
@@ -341,7 +347,7 @@ Optional environment variables:
 ---
 
 ### `The result exactly matches`
-  * Checks the results of the `When the resulting table "{schema_and_table}" is queried` step and makes sure the given rows exactly match the actual result. Ordering is not important. An optional explanation can be added at the end to clarify what is expected in the result.<br/>
+  * Checks the results of the [`When the resulting table "{schema_and_table}" is queried`](#when-the-resulting-table-schema_and_table-is-queried) step and makes sure the given rows exactly match the actual result. Ordering is not important. An optional explanation can be added at the end to clarify what is expected in the result.<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     ```cucumber
@@ -352,7 +358,7 @@ Optional environment variables:
 ---
 
 ### `Then the result is empty`
-  * Checks that the results of the `When the resulting table "{schema_and_table}" is queried` step is empty. An optional explanation can be added at the end to clarify what is expected in the result.<br/>
+  * Checks that the results of the [`When the resulting table "{schema_and_table}" is queried`](#when-the-resulting-table-schema_and_table-is-queried) step is empty. An optional explanation can be added at the end to clarify what is expected in the result.<br/>
     <details><summary> <b>Example</b> (click to expand) </summary><p>
 
     ```cucumber
