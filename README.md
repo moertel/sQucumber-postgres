@@ -105,6 +105,257 @@ Optional environment variables:
 | TEST_DB_NAME_OVERRIDE | _String_ | Define a custom name for the testing database created on the instance. Setting this to `foo` will result in the database `test_env_foo` being created | random 5-digit integer |
 
 
+## Available Steps
+### `Given the SQL files in the path "path/to/sql"`
+  * Allows to add the path to SQL scripts that need to be executed to produce the result set<br/>
+    Path can be either relative to the project root or absolute<br/>
+    Files are executed in the order they are given, using `When the given SQL files are executed`<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    For the files `project/src/sql/some_query.sql` and `project/src/sql/some_query.sql`:
+
+    ```cucumber
+    Given the SQL files in the path "project/src/sql":
+      | file              |
+      | some_query.sql    |
+      | another_query.sql |
+    When the given SQL files are executed
+    And the resulting table "some_schema.some_table" is queried
+    Then the result is empty
+    ```
+    </p>
+    </details>
+
+---
+
+### `Given the SQL file path "path/to/sql"`
+  * Allows to add the path to SQL scripts that need to be executed during the steps<br/>
+    Path can be either relative to the project root or absolute<br/>
+    Works the same as `Given the SQL files in the path "path/to/sql"` but doesn't take a list of queries<br/>
+    Scripts can be executed on a per-file basis using `When the SQL file "some_file.sql" is executed`<br/><br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    For the path `project/src/sql`:
+
+    ```cucumber
+    Given the SQL file path "project/src/sql"
+    When the SQL file "some_file.sql" is executed
+    And the resulting table "some_schema.some_table" is queried
+    Then result exactly matches:
+      | some_column | another_column |
+      | foo         | bar            |
+    ```
+    </p>
+    </details>
+
+---
+
+### `Given their table dependencies`
+  * Tables used by the SQL script(s). As the testing framework operates on a new, empty database, this makes sure that all dependencies are present upon script execution. Initially, tables defined here will be empty. You can add data to them by using the step `Given the existing table "some_schema.some_table"`<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    Given the SQL files in the path "project/src/sql":
+      | file      |
+      | query.sql |
+    And their table dependencies:
+      | table                  |
+      | some_schema.some_table |
+    When the given SQL files are executed
+    And the resulting table "some_schema.another_table" is queried
+    Then the result exactly matches:
+      | some_column | another_column |
+      | foo         | bar            |
+    ```
+    </p>
+    </details>
+
+---
+
+### `Given their schema dependencies`
+  * Schemas used by the SQL scripts if not already specified by the step `Given their table dependencies`. This step usually makes sense if your script wants to write data to an own schema.<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    Given the SQL files in the path "project/src/sql":
+      | file      |
+      | query.sql |
+    And their table dependencies:
+      | table                  |
+      | some_schema.some_table |
+    And their schema dependencies:
+      | schema         |
+      | another_schema |
+    When the given SQL files are executed
+    And the resulting table "another_schema.some_table" is queried
+    Then the result exactly matches:
+      | some_column | another_column |
+      | foo         | bar            |
+    ```
+    </p>
+    </details>
+
+---
+
+### `Given the following defaults for "{schema_and_table}" (if not stated otherwise)`
+  * Allows to set default values for particular table columns. This is useful if values are not allowed to be `NULL` but would clutter test scenarios or make tables very wide. Default values can always be overwritten in test steps. This step makes most sense as a `Background` step.<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    Background:
+      Given the following defaults for "some_schema.some_table" (if not stated otherwise):
+        | some_column | another_column |
+        | foo         | bar            |
+
+    Scenario:
+      Given the SQL files in the path "project/src/sql":
+        | file      |
+        | query.sql |
+      And their table dependencies:
+        | table                  |
+        | some_schema.some_table |
+      And the existing table "some_schema.some_table":
+        | yet_another_column |
+        | 123                |
+      When the given SQL files are executed
+      And the resulting table "another_schema.some_table" is queried
+      Then the result exactly matches:
+        | some_column | another_column |
+        | foo         | bar            |
+    ```
+    </p>
+    </details>
+
+---
+
+### `Given a clean environment`
+  * Truncates all tables currently present in the database. This is usually called implicitly before a new scenario is executed.<br/>
+
+---
+
+### `Given the existing table "{schema_and_table}":`
+  * Allows to insert data into the database. You only need to specify the columns that your SQL script relies on. All other column values will be set to `NULL`. Specifying a column but leaving the value empty will also result in a `NULL` value. All constraints and defaults are removed from the mock database, so it's your responsibility to ensure data integrity.<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    Background:
+      Given the SQL files in the path "project/src/sql":
+        | file      |
+        | query.sql |
+      And their table dependencies:
+        | table                  |
+        | some_schema.some_table |
+
+    Scenario:
+      Given the existing table "some_schema.some_table":
+        | some_column | another_column |
+        | 123         | foo            |
+        | 345         |                |
+        |             | bar            |
+      When the given SQL files are executed
+      And the resulting table "some_schema.another_table" is queried
+      Then the result exactly matches:
+        | foo_count | bar_count |
+        | 1         | 0         |
+    ```
+    </p>
+    </details>
+
+---
+
+### `When the given SQL files are executed`
+  * Takes all files provided in the `Given the SQL files in the path "{path}" step and executes them in the specified order.`<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    ```
+    </p>
+    </details>
+
+### `When the SQL file "{file_name}" is executed`
+  * Executes the given file at `{file_name}`. This can be an absolute file path or relative to the project root. If a path has been specified in the `Given the SQL file path {path}` step, it will be respected.<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    ```
+    </p>
+    </details>
+
+### `When the resulting table "{schema_and_table}" is queried`
+  * Fetches the contents of the table specified in `{schema_and_table}`. Note that the result is not necessarily ordered, so in case you expect more than one row and want to compare that a table matches _exactly_, consider ordering the result with the `When the resulting table "{schema_and_table}" is queried, ordered by "{column_name}"` step.<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    ```
+    </p>
+    </details>
+
+### `When the resulting table "{schema_and_table}" is queried, ordered by "{column_name}"`
+  * Fetches the contents of the table specified in `{schema_and_table}` and orders the result by the `{column_name}` given. This is useful when the result is expected to match _exactly_ a particular result because rows will in this case be compared one by one in the given order.<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    ```
+    </p>
+    </details>
+
+---
+
+### `Then the result starts with`
+  * Checks the results of the `When the resulting table "{schema_and_table}" is queried` step and compares only the first row. An optional explanation can be added at the end, to make clear what is expected in the result.<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    ```
+    </p>
+    </details>
+
+---
+
+### `Then the result includes`
+  * Checks the results of the `When the resulting table "{schema_and_table}" is queried` step and makes sure the given expected rows do occur in the actual result, in any order. An optional explanation can be added at the end to clarify what is expected in the result.<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    ```
+    </p>
+    </details>
+
+---
+
+### `The result does not include`
+  * Checks the results of the `When the resulting table "{schema_and_table}" is queried` step and makes sure the given rows do not occur in the actual result. An optional explanation can be added at the end to clarify what is expected in the result.<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    ```
+    </p>
+    </details>
+
+---
+
+### `The result exactly matches`
+  * Checks the results of the `When the resulting table "{schema_and_table}" is queried` step and makes sure the given rows exactly match the actual result. Ordering is not important. An optional explanation can be added at the end to clarify what is expected in the result.<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    ```
+    </p>
+    </details>
+
+---
+
+### `Then the result is empty`
+  * Checks that the results of the `When the resulting table "{schema_and_table}" is queried` step is empty. An optional explanation can be added at the end to clarify what is expected in the result.<br/>
+    <details><summary> <b>Example</b> (click to expand) </summary><p>
+
+    ```cucumber
+    ```
+    </p>
+    </details>
+
+---
+
 ## Contributing
 
 1. Fork it ( https://github.com/moertel/squcumber-postgres/fork )
