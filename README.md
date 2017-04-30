@@ -1,6 +1,6 @@
 # sQucumber Postgres
 
-[![Gem Version](https://badge.fury.io/rb/squcumber-postgres.svg)](https://badge.fury.io/rb/squcumber-postgres) [![Build Status](https://travis-ci.com/moertel/sQucumber-postgres.svg?token=JdMSy1Kn3zTJXfALzs25&branch=master)](https://travis-ci.com/moertel/sQucumber-postgres)
+[![Build Status](https://travis-ci.org/moertel/sQucumber-postgres.svg)](https://travis-ci.org/moertel/sQucumber-postgres) [![Gem Version](https://badge.fury.io/rb/squcumber-postgres.svg)](https://badge.fury.io/rb/squcumber-postgres)
 
 Bring the BDD approach to writing SQL for your Postgres instance and be confident that your scripts do what they're supposed to do. Define and execute SQL unit, acceptance and integration tests and let them serve as a living documentation for your queries. It's Cucumber - for SQL!
 
@@ -34,7 +34,7 @@ Feature: KPI Reporting
 Add this line to your application's Gemfile:
 
 ```ruby
-gem 'squcumber-redshift'
+gem 'squcumber-postgres'
 ```
 
 And then execute:
@@ -43,14 +43,14 @@ And then execute:
 
 Or install it yourself as:
 
-    $ gem install squcumber-redshift
+    $ gem install squcumber-postgres
 
 ## Usage
 
 Put your `.feature` files in the directory `feature` in your project's root. (You may use subfolders.)
 In order to take advantage of auto-generated Rake tasks, add this to your `Rakefile`:
 ```ruby
-require 'squcumber-redshift/rake/task'
+require 'squcumber-postgres/rake/task'
 ```
 
 The following folder structure
@@ -90,24 +90,24 @@ Make sure the following environment variables are set when running sQucumber's R
 
 | Name | Description |
 | ---- | ----------- |
-| REDSHIFT_HOST | Hostname of the AWS Redshift cluster |
-| REDSHIFT_PORT | Redshift port to connect to |
-| REDSHIFT_USER | Name of the Redshift user to use to create a testing database, must be a superuser |
-| REDSHIFT_PASSWORD | Password of the Redshift user |
-| REDSHIFT_DB | Name of the DB on the Redshift cluster |
+| DB_HOST | Hostname of the Postgres instance |
+| DB_PORT | Postgres port to connect to |
+| DB_USER | Name of the Postgres user to use to create a testing database, must be a superuser |
+| DB_PASSWORD | Password of the Postgres user |
+| DB_NAME | Name of the DB on the Postgres instance |
 
 Optional environment variables:
 
 | Name | Value | Description | Default |
 | ---- | ----- | ----------- | ------- |
-| SPEC_SHOW_STDOUT | 1 | Show output of statements executed on the Redshift cluster | 0 |
+| SPEC_SHOW_STDOUT | 1 | Show output of statements executed on the Postgres instance | 0 |
 | KEEP_TEST_DB | 1 | Do not drop the database after test execution (useful for manual inspection) | 0 |
-| TEST_DB_NAME_OVERRIDE | _String_ | Define a custom name for the testing database created on the cluster. Setting this to `foo` will result in the database `test_env_foo` being created | random 5-digit integer |
+| TEST_DB_NAME_OVERRIDE | _String_ | Define a custom name for the testing database created on the instance. Setting this to `foo` will result in the database `test_env_foo` being created | random 5-digit integer |
 
 
 ## Contributing
 
-1. Fork it ( https://github.com/moertel/squcumber-redshift/fork )
+1. Fork it ( https://github.com/moertel/squcumber-postgres/fork )
 2. Create your feature branch (`git checkout -b my-new-feature`)
 3. Commit your changes (`git commit -am 'Add some feature'`)
 4. Push to the branch (`git push origin my-new-feature`)
