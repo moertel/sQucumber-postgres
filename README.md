@@ -5,6 +5,7 @@
 Bring the BDD approach to writing SQL for your Postgres instance and be confident that your scripts do what they're supposed to do. Define and execute SQL unit, acceptance and integration tests and let them serve as a living documentation for your queries. It's Cucumber - for SQL!
 
  * [Example](#example)
+ * [How it works](#how-it-works)
  * [Installation](#installation)
  * [Usage](#usage)
    * [Environment variables](#environment-variables)
@@ -34,6 +35,18 @@ Feature: KPI Reporting
       | 2016-07-29 | 1        | 0      |
       | 2016-07-31 | 2        | 1      |
 ```
+
+## How It Works
+
+Feature files are written in the <a href="https://github.com/cucumber/cucumber/wiki/Gherkin" target="_blank">Gherkin language</a>. A feature, such as an SQL file, consists of several scenarios. A scenario describes how the script behaves under some particular conditions which are outlined using <a href=https://github.com/cucumber/cucumber/wiki/Given-When-Then>**Given - When - Then**</a> steps.
+
+Under the hood, sQucumber connects to your Postgres instance, creates a new database (prefixed with `test_env_` followed by a random number) and copies over the schemas and tables you specify in the `Given` steps. The advantage of this is that you always test against the current live version of your database. If your script can be executed here, it is guaranteed to be able to be executed in production. With further `Then` steps you'll add mock data. Other than with actual live data, mocked table data gives you the freedom to define edge cases exactly as you like, even if they don't (yet) exist in production.
+
+The `When` steps execute your SQL files and fetch their results. These can now be compared against expectations as specified in the `Then` steps. Whether you expect an empty result, want to check for the occurrence of partial results or make sure that actual and expected output match _exactly_, everything's possible.
+
+Should a scenario fail, the differences between the expected and actual results will be displayed clearly, so you can fix your SQL script accordingly. Optionally, an HTML file with the test results is created, that can serve as a living documentation that can be passed on to stakeholders who want to use the script and understand how it works.
+
+A full specification of all the available `Given - When - Then` steps can be found [here](#available-steps).
 
 ## Installation
 
