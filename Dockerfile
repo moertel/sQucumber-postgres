@@ -14,4 +14,4 @@ RUN gem install ./squcumber-postgres.gem
 RUN echo "require 'squcumber-postgres/rake/task'" > Rakefile
 
 ENTRYPOINT ["rake"]
-CMD ["test:sql::features"]
+CMD ["test:sql:features"]

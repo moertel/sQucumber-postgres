@@ -14,9 +14,8 @@ module Squcumber
             @features_dir = File.join(FileUtils.pwd, 'features')
             features = Dir.glob("#{@features_dir}/**/*.feature")
             parent_directories = features.map { |f| f.split('/')[0..-2].join('/') }.uniq
-
             features.each do |feature|
-              feature_name = feature.gsub(File.join(FileUtils.pwd, 'features/'), '').gsub('.feature', '')
+              feature_name = feature.gsub(@features_dir + '/', '').gsub('.feature', '')
               task_name = feature_name.gsub('/', ':')
               desc "Run SQL tests for feature #{feature_name}"
               task "sql:#{task_name}".to_sym, [:scenario_line_number] do |_, args|
@@ -30,9 +29,12 @@ module Squcumber
             end
 
             parent_directories.each do |feature|
-              feature_name = feature.gsub(File.join(FileUtils.pwd, 'features/'), '').gsub('.feature', '')
+              feature_name = feature.gsub(@features_dir + '/', '')
+              if feature_name.start_with?('/')
+                feature_name = feature_name[1..-1]
+              end
               task_name = feature_name.gsub('/', ':')
-              desc "Run SQL tests for all features in #{feature_name}"
+              desc "Run SQL tests for all features in /#{feature_name}"
               task "sql:#{task_name}".to_sym do
                 cucumber_task_name = "cucumber_#{task_name}".to_sym
                 ::Cucumber::Rake::Task.new(cucumber_task_name) do |t|
