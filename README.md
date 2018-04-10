@@ -8,6 +8,7 @@ Bring the BDD approach to writing SQL for your Postgres instance and be confiden
  * [How it works](#how-it-works)
  * [Installation](#installation)
  * [Usage](#usage)
+   * [Running with Docker](#docker)
    * [Environment variables](#environment-variables)
  * [Step definitions](#available-steps)
 
@@ -111,6 +112,7 @@ Instead of installing the Gem in your project, you can run the SQL tests inside 
 docker run \
   -v /local/path/to/sql:/sql \
   -v /local/path/to/features:/features \
+  -v /local/path/to/custom_step_definitions:/custom_step_definitions \
   -e DB_HOST=postgres.example.com \
   -e DB_PORT=5432 \
   -e DB_USER=someuser \
@@ -138,6 +140,7 @@ Optional environment variables:
 | SPEC_SHOW_STDOUT | 1 | Show output of statements executed on the Postgres instance | 0 |
 | KEEP_TEST_DB | 1 | Do not drop the database after test execution (useful for manual inspection) | 0 |
 | TEST_DB_NAME_OVERRIDE | _String_ | Define a custom name for the testing database created on the instance. Setting this to `foo` will result in the database `test_env_foo` being created | random 5-digit integer |
+| CUSTOM_STEPS_DIR | /path/to/dir | Path to a directory where custom step definitions are stored | |
 
 
 ## Available Steps

@@ -7,6 +7,8 @@ COPY ./squcumber-postgres.gemspec .
 RUN gem build squcumber-postgres.gemspec
 
 FROM ruby:2.3.0
+ENV CUSTOM_STEPS_DIR /custom_step_definitions
+VOLUME /custom_step_definitions
 VOLUME /features
 VOLUME /sql
 COPY --from=builder /squcumber-postgres*.gem squcumber-postgres.gem
