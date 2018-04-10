@@ -1,11 +1,17 @@
-FROM ruby:2.3.0
-
-COPY ./squcumber-postgres.gemspec squcumber-postgres.gemspec
-COPY ./Gemfile Gemfile
-COPY ./Rakefile Rakefile
-RUN bundle install
-
-COPY ./spec spec
+FROM ruby:2.3.0 as builder
 COPY ./lib lib
+COPY ./spec spec
+COPY ./Rakefile .
+COPY ./Gemfile .
+COPY ./squcumber-postgres.gemspec .
+RUN gem build squcumber-postgres.gemspec
 
-CMD ["bundle", "exec", "rspec"]
+FROM ruby:2.3.0
+VOLUME /features
+VOLUME /sql
+COPY --from=builder /squcumber-postgres*.gem squcumber-postgres.gem
+RUN gem install ./squcumber-postgres.gem
+RUN echo "require 'squcumber-postgres/rake/task'" > Rakefile
+
+ENTRYPOINT ["rake"]
+CMD ["test:sql::features"]
