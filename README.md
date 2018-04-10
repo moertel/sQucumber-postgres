@@ -103,6 +103,22 @@ Or execute a specific scenario only by specifying its line number in the corresp
 rake test:sql:marketing:sales[12]
 ```
 
+### Docker
+
+Instead of installing the Gem in your project, you can run the SQL tests inside a Docker container. There's an automated build for [`moertel/squcumber-postgres`](https://hub.docker.com/r/moertel/squcumber-postgres/) tagged with the releases of the Gem. Alternatively, you can use the version from the `master` branch with the `latest` tag. To run the tests, mount your SQL and feature files into the container and provide the environment variables to access your Postgres database:
+
+```bash
+docker run \
+  -v /local/path/to/sql:/sql \
+  -v /local/path/to/features:/features \
+  -e DB_HOST=postgres.example.com \
+  -e DB_PORT=5432 \
+  -e DB_USER=someuser \
+  -e DB_PASSWORD=secret \
+  -e DB_NAME=somedb \
+  -it moertel/squcumber-postgres:latest
+```
+
 ### Environment Variables
 
 Make sure the following environment variables are set when running sQucumber's Rake tasks:
