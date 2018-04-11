@@ -30,10 +30,11 @@ module Squcumber
 
             parent_directories.each do |feature|
               feature_name = feature.gsub(@features_dir + '/', '')
-              if feature_name.start_with?('/')
-                feature_name = feature_name[1..-1]
-              end
               task_name = feature_name.gsub('/', ':')
+              if feature_name.eql?(@features_dir)
+                feature_name = 'features'
+                task_name = 'all'
+              end
               desc "Run SQL tests for all features in /#{feature_name}"
               task "sql:#{task_name}".to_sym do
                 cucumber_task_name = "cucumber_#{task_name}".to_sym
