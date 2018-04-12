@@ -97,9 +97,10 @@ When(/^the resulting table "?([^\s"]*)"? is queried(?:, ordered by "?([^"]*)"?)?
   @result = TESTING_DATABASE.query("select * from #{table} #{sort_statement};").map { |e| e }
 end
 
-Then(/^the result starts with.*$/) do |data|
+Then(/^the result( with date placeholders)? starts with.*$/) do |placeholder, data|
   actual = @result[0..(data.hashes.length - 1)] || []
   expected = data.hashes || []
+  expected = convert_mock_values(expected) if placeholder
 
   expected.each_with_index do |hash, i|
     raise("Does not start with expected result, got:\n#{format_error(data, actual)}") unless actual[i].all? do |key, value|
@@ -108,9 +109,10 @@ Then(/^the result starts with.*$/) do |data|
   end
 end
 
-Then(/^the result includes.*$/) do |data|
+Then(/^the result( with date placeholders)? includes.*$/) do |placeholder, data|
   actual = @result || []
   expected = data.hashes || []
+  expected = convert_mock_values(expected) if placeholder
 
   expected.each do |hash|
     raise("Result is not included, got:\n#{format_error(data, actual)}") unless actual.any? do |row|
@@ -121,9 +123,10 @@ Then(/^the result includes.*$/) do |data|
   end
 end
 
-Then(/^the result does not include.*$/) do |data|
+Then(/^the result( with date placeholders)? does not include.*$/) do |placeholder, data|
   actual = @result || []
   expected = data.hashes || []
+  expected = convert_mock_values(expected) if placeholder
 
   expected.each do |hash|
     raise("Result is included, got:\n#{format_error(data, actual)}") if actual.any? do |row|
@@ -134,9 +137,10 @@ Then(/^the result does not include.*$/) do |data|
   end
 end
 
-Then(/^the result exactly matches.*$/) do |data|
+Then(/^the result( with date placeholders)? exactly matches.*$/) do |placeholder, data|
   actual = @result || []
   expected = data.hashes || []
+  expected = convert_mock_values(expected) if placeholder
 
   raise("Does not match exactly, got:\n#{format_error(data, actual)}") if actual.length != expected.length
 
