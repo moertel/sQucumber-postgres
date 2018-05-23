@@ -22,7 +22,10 @@ module Squcumber
                 cucumber_task_name = "cucumber_#{task_name}".to_sym
                 ::Cucumber::Rake::Task.new(cucumber_task_name) do |t|
                   line_number = args[:scenario_line_number].nil? ? '' : ":#{args[:scenario_line_number]}"
-                  t.cucumber_opts = "#{feature}#{line_number} --format pretty --format html --out #{feature_name.gsub('/','_')}.html --require #{File.dirname(__FILE__)}/../support --require #{File.dirname(__FILE__)}/../step_definitions #{ENV['CUSTOM_STEPS_DIR'] ? '--require ' + ENV['CUSTOM_STEPS_DIR'] : ''}"
+                  output_dir = ENV['CUSTOM_OUTPUT_DIR'] ? ENV['CUSTOM_OUTPUT_DIR'] : '/tmp'
+                  output_file = output_dir + '/' + feature_name.gsub('/', '_')
+                  output_opts = "--format html --out #{output_file}.html --format json --out #{output_file}.json"
+                  t.cucumber_opts = "#{feature}#{line_number} --format pretty #{output_opts} --require #{File.dirname(__FILE__)}/../support --require #{File.dirname(__FILE__)}/../step_definitions #{ENV['CUSTOM_STEPS_DIR'] ? '--require ' + ENV['CUSTOM_STEPS_DIR'] : ''}"
                 end
                 ::Rake::Task[cucumber_task_name].execute
               end
@@ -39,7 +42,7 @@ module Squcumber
               task "sql:#{task_name}".to_sym do
                 cucumber_task_name = "cucumber_#{task_name}".to_sym
                 ::Cucumber::Rake::Task.new(cucumber_task_name) do |t|
-                  t.cucumber_opts = "#{feature} --format pretty --format html --out #{feature_name.gsub('/','_')}.html --require #{File.dirname(__FILE__)}/../support --require #{File.dirname(__FILE__)}/../step_definitions #{ENV['CUSTOM_STEPS_DIR'] ? '--require ' + ENV['CUSTOM_STEPS_DIR'] : ''}"
+                  t.cucumber_opts = "#{feature} --format pretty #{output_opts} --require #{File.dirname(__FILE__)}/../support --require #{File.dirname(__FILE__)}/../step_definitions #{ENV['CUSTOM_STEPS_DIR'] ? '--require ' + ENV['CUSTOM_STEPS_DIR'] : ''}"
                 end
                 ::Rake::Task[cucumber_task_name].execute
               end
