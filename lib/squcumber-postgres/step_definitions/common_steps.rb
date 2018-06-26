@@ -86,7 +86,7 @@ When(/^the given SQL files are executed$/) do
   end
 end
 
-When(/^the SQL file "?([^\s]+)"? is executed/) do |file|
+When(/^the SQL file "?([^\s"]+)"? is executed/) do |file|
   silence_streams(STDERR) do
     TESTING_DATABASE.exec_file("#{@sql_file_path}/#{file}")
   end
