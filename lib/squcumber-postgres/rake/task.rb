@@ -26,7 +26,8 @@ module Squcumber
                   output_file = ENV['CUSTOM_OUTPUT_NAME'] ? ENV['CUSTOM_OUTPUT_NAME'] : feature_name.gsub('/', '_')
                   output_path = output_dir + '/' + output_file
                   output_opts = "--format html --out #{output_path}.html --format json --out #{output_path}.json"
-                  t.cucumber_opts = "#{feature}#{line_number} --format pretty #{output_opts} --require #{File.dirname(__FILE__)}/../support --require #{File.dirname(__FILE__)}/../step_definitions #{ENV['CUSTOM_STEPS_DIR'] ? '--require ' + ENV['CUSTOM_STEPS_DIR'] : ''}"
+                  extra_config = ENV['SQUCUMBER_OPTIONS_EXTRA']
+                  t.cucumber_opts = "#{feature}#{line_number} --format pretty #{output_opts} --require #{File.dirname(__FILE__)}/../support --require #{File.dirname(__FILE__)}/../step_definitions #{ENV['CUSTOM_STEPS_DIR'] ? '--require ' + ENV['CUSTOM_STEPS_DIR'] : ''} #{extra_config}"
                 end
                 ::Rake::Task[cucumber_task_name].execute
               end
@@ -47,7 +48,8 @@ module Squcumber
                   output_file = ENV['CUSTOM_OUTPUT_NAME'] ? ENV['CUSTOM_OUTPUT_NAME'] : feature_name.gsub('/', '_')
                   output_path = output_dir + '/' + output_file
                   output_opts = "--format html --out #{output_path}.html --format json --out #{output_path}.json"
-                  t.cucumber_opts = "#{feature} --format pretty #{output_opts} --require #{File.dirname(__FILE__)}/../support --require #{File.dirname(__FILE__)}/../step_definitions #{ENV['CUSTOM_STEPS_DIR'] ? '--require ' + ENV['CUSTOM_STEPS_DIR'] : ''}"
+                  extra_config = ENV['SQUCUMBER_OPTIONS_EXTRA']
+                  t.cucumber_opts = "#{feature} --format pretty #{output_opts} --require #{File.dirname(__FILE__)}/../support --require #{File.dirname(__FILE__)}/../step_definitions #{ENV['CUSTOM_STEPS_DIR'] ? '--require ' + ENV['CUSTOM_STEPS_DIR'] : ''} #{extra_config}"
                 end
                 ::Rake::Task[cucumber_task_name].execute
               end

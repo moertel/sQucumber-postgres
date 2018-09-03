@@ -141,6 +141,7 @@ Optional environment variables:
 | KEEP_TEST_DB | 1 | Do not drop the database after test execution (useful for manual inspection) | 0 |
 | TEST_DB_NAME_OVERRIDE | _String_ | Define a custom name for the testing database created on the instance. Setting this to `foo` will result in the database `test_env_foo` being created | random 5-digit integer |
 | CUSTOM_STEPS_DIR | /path/to/dir | Path to a directory where custom step definitions are stored | |
+| SQUCUMBER_OPTIONS_EXTRA | `--strict` | Specify extra configuration options to the run command | |
 
 
 ## Available Steps
