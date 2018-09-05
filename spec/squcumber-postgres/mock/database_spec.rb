@@ -335,6 +335,139 @@ module Squcumber::Postgres::Mock
       end
     end
 
+    describe '#_get_column_definitions' do
+      let(:column_definition_integer) do
+        {
+          'table_schema' => 'some_schema',
+          'table_name' => 'some_table',
+          'column_name' => 'some_column',
+          'udt_name' => 'int4',
+          'data_type' => 'integer',
+          'character_maximum_length' => nil,
+          'numeric_precision' => 32,
+          'numeric_scale' => 0
+        }
+      end
+      let(:column_definition_varchar) do
+        {
+          'table_schema' => 'some_schema',
+          'table_name' => 'some_table',
+          'column_name' => 'some_column',
+          'udt_name' => 'varchar',
+          'data_type' => 'character varying',
+          'character_maximum_length' => 255,
+          'numeric_precision' => nil,
+          'numeric_scale' => nil
+        }
+      end
+      let(:column_definition_varchar_array) do
+        {
+          'table_schema' => 'some_schema',
+          'table_name' => 'some_table',
+          'column_name' => 'some_column',
+          'udt_name' => '_varchar',
+          'data_type' => 'ARRAY',
+          'character_maximum_length' => nil,
+          'numeric_precision' => nil,
+          'numeric_scale' => nil
+        }
+      end
+      let(:column_definition_char) do
+        {
+          'table_schema' => 'some_schema',
+          'table_name' => 'some_table',
+          'column_name' => 'some_column',
+          'udt_name' => '_bpchar',
+          'data_type' => 'character',
+          'character_maximum_length' => 50,
+          'numeric_precision' => nil,
+          'numeric_scale' => nil
+        }
+      end
+      let(:column_definition_jsonb) do
+        {
+          'table_schema' => 'some_schema',
+          'table_name' => 'some_table',
+          'column_name' => 'some_column',
+          'udt_name' => 'jsonb',
+          'data_type' => 'jsonb',
+          'character_maximum_length' => nil,
+          'numeric_precision' => nil,
+          'numeric_scale' => nil
+        }
+      end
+      let(:column_definition_timestamp) do
+        {
+          'table_schema' => 'some_schema',
+          'table_name' => 'some_table',
+          'column_name' => 'some_column',
+          'udt_name' => 'timestamp',
+          'data_type' => 'timestamp without time zone',
+          'character_maximum_length' => nil,
+          'numeric_precision' => nil,
+          'numeric_scale' => nil
+        }
+      end
+      let(:column_definition_numeric) do
+        {
+          'table_schema' => 'some_schema',
+          'table_name' => 'some_table',
+          'column_name' => 'some_column',
+          'udt_name' => 'numeric',
+          'data_type' => 'numeric',
+          'character_maximum_length' => nil,
+          'numeric_precision' => 6,
+          'numeric_scale' => 2
+        }
+      end
+
+      before(:each) do
+        @dummy = described_class.new(production_database)
+      end
+
+      it 'parses integer columns correctly' do
+        expect(@dummy.send(:_get_column_definitions, [column_definition_integer])).to match([
+          'some_column integer default null'
+        ])
+      end
+
+      it 'parses varchar columns correctly' do
+        expect(@dummy.send(:_get_column_definitions, [column_definition_varchar])).to match([
+          'some_column character varying(255) default null'
+        ])
+      end
+
+      it 'parses array varchar columns correctly' do
+        expect(@dummy.send(:_get_column_definitions, [column_definition_varchar_array])).to match([
+          'some_column varchar[] default null'
+        ])
+      end
+
+      it 'parses char columns correctly' do
+        expect(@dummy.send(:_get_column_definitions, [column_definition_char])).to match([
+          'some_column character(50) default null'
+        ])
+      end
+
+      it 'parses jsonb columns correctly' do
+        expect(@dummy.send(:_get_column_definitions, [column_definition_jsonb])).to match([
+          'some_column jsonb default null'
+        ])
+      end
+
+      it 'parses timestamp columns correctly' do
+        expect(@dummy.send(:_get_column_definitions, [column_definition_timestamp])).to match([
+          'some_column timestamp without time zone default null'
+        ])
+      end
+
+      it 'parses numeric columns correctly' do
+        expect(@dummy.send(:_get_column_definitions, [column_definition_numeric])).to match([
+          'some_column numeric(6,2) default null'
+        ])
+      end
+    end
+
     describe '#_get_create_table_statement' do
       let(:schema) { 'some_schema' }
       let(:table) { 'some_table' }

@@ -117,10 +117,31 @@ module Squcumber
 
         def _get_column_definitions(table_definition)
           table_definition.map do |definition|
-            if definition['data_type'].eql?('character')
-              definition['data_type'] = "#{definition['data_type']}(#{definition['character_maximum_length'].to_s})"
+            schema_column_type = ''
+            is_array = false
+            if definition['data_type'].eql?('ARRAY')
+                is_array = true
+                schema_column_type = definition['udt_name'].gsub(/^\_/, '')
+            else
+                schema_column_type = definition['data_type']
             end
-            "#{definition['column_name']} #{definition['data_type']} default null"
+
+            # Deal with (var)chars
+            if definition['character_maximum_length']
+                schema_column_type = schema_column_type + "(#{definition['character_maximum_length'].to_s})"
+            end
+
+            # Deal with decimals
+            if definition['udt_name'].eql?('numeric') and definition['numeric_precision'] and definition['numeric_scale']
+                schema_column_type = schema_column_type + "(#{definition['numeric_precision'].to_s},#{definition['numeric_scale'].to_s})"
+            end
+
+            # Deal with arrays
+            if is_array
+                schema_column_type = schema_column_type + '[]'
+            end
+
+            "#{definition['column_name']} #{schema_column_type} default null"
           end
         end
       end
