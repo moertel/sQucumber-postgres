@@ -34,10 +34,10 @@ module MatcherHelpers
         #    2 years ago (as year)
         #    => '2015'
         #
-        #    beginning of last month
+        #    beginning of month last month
         #    => '2017-06-01'
         #
-        #    end of last year
+        #    end of month last year
         #    => '2016-12-31'
         #
         #    today (as custom '%Y-%m')
