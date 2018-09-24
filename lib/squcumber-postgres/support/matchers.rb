@@ -142,7 +142,3 @@ module MatcherHelpers
     end
   end
 end
-
-if defined?(World)
-  World(MatcherHelpers)
-end

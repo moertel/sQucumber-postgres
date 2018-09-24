@@ -16,6 +16,7 @@ Gem::Specification.new do |s|
     'lib/squcumber-postgres/step_definitions/common_steps.rb',
     'lib/squcumber-postgres/support/database.rb',
     'lib/squcumber-postgres/support/matchers.rb',
+    'lib/squcumber-postgres/support/helpers.rb',
     'lib/squcumber-postgres/support/output.rb',
     'lib/squcumber-postgres/rake/task.rb'
   ]
