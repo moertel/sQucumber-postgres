@@ -27,13 +27,13 @@ module Squcumber
           expect(dummy_class.new.convert_mock_value('30 days from now')).to eql('2017-08-14')
         end
         it 'converts to day' do
-          expect(dummy_class.new.convert_mock_value('10 days from now (as day)')).to eql(25)
+          expect(dummy_class.new.convert_mock_value('10 days from now (as day)')).to eql('25')
         end
         it 'converts to month' do
-          expect(dummy_class.new.convert_mock_value('30 days from now (as month)')).to eql(8)
+          expect(dummy_class.new.convert_mock_value('30 days from now (as month)')).to eql('8')
         end
         it 'converts to year' do
-          expect(dummy_class.new.convert_mock_value('30 days from now (as year)')).to eql(2017)
+          expect(dummy_class.new.convert_mock_value('30 days from now (as year)')).to eql('2017')
         end
         it 'sets beginning of day' do
           expect(dummy_class.new.convert_mock_value('beginning of day 10 days from now')).to eql('2017-07-25')
@@ -57,13 +57,13 @@ module Squcumber
           expect(dummy_class.new.convert_mock_value('10 months from now')).to eql('2018-05-15')
         end
         it 'converts to day' do
-          expect(dummy_class.new.convert_mock_value('10 months from now (as day)')).to eql(15)
+          expect(dummy_class.new.convert_mock_value('10 months from now (as day)')).to eql('15')
         end
         it 'converts to month' do
-          expect(dummy_class.new.convert_mock_value('10 months from now (as month)')).to eql(5)
+          expect(dummy_class.new.convert_mock_value('10 months from now (as month)')).to eql('5')
         end
         it 'converts to year' do
-          expect(dummy_class.new.convert_mock_value('10 months from now (as year)')).to eql(2018)
+          expect(dummy_class.new.convert_mock_value('10 months from now (as year)')).to eql('2018')
         end
         it 'sets beginning of month' do
           expect(dummy_class.new.convert_mock_value('beginning of month 10 months from now')).to eql('2018-05-01')
@@ -87,13 +87,13 @@ module Squcumber
           expect(dummy_class.new.convert_mock_value('10 years from now')).to eql('2027-07-15')
         end
         it 'converts to day' do
-          expect(dummy_class.new.convert_mock_value('10 years from now (as day)')).to eql(15)
+          expect(dummy_class.new.convert_mock_value('10 years from now (as day)')).to eql('15')
         end
         it 'converts to month' do
-          expect(dummy_class.new.convert_mock_value('10 years from now (as month)')).to eql(7)
+          expect(dummy_class.new.convert_mock_value('10 years from now (as month)')).to eql('7')
         end
         it 'converts to year' do
-          expect(dummy_class.new.convert_mock_value('10 years from now (as year)')).to eql(2027)
+          expect(dummy_class.new.convert_mock_value('10 years from now (as year)')).to eql('2027')
         end
         it 'sets beginning of year' do
           expect(dummy_class.new.convert_mock_value('beginning of year 10 months from now')).to eql('2018-01-01')
