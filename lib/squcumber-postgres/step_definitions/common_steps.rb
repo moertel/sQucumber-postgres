@@ -84,7 +84,7 @@ When(/^the given SQL files are executed$/) do
   silence_streams(STDERR) do
     @sql_files_to_execute.each do |file|
       # This overwrites the result if multiple files are executed
-      @result = TESTING_DATABASE.exec_file(file)
+      @result = TESTING_DATABASE.exec_file(file).map { |e| e }
     end
   end
 end
@@ -92,7 +92,7 @@ end
 When(/^the SQL file "?([^\s"]+)"? is executed/) do |file|
   silence_streams(STDERR) do
     # This overwrites the result if multiple files are executed
-    @result = TESTING_DATABASE.exec_file("#{@sql_file_path}/#{file}")
+    @result = TESTING_DATABASE.exec_file("#{@sql_file_path}/#{file}").map { |e| e }
   end
 end
 
