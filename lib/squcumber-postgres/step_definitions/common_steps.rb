@@ -101,6 +101,13 @@ When(/^the resulting table "?([^\s"]*)"? is queried(?:, ordered by "?([^"]*)"?)?
   @result = TESTING_DATABASE.query("select * from #{table} #{sort_statement};").map { |e| e }
 end
 
+When(/^the result is ordered by "?([^"]+)"?/) do |sort_columns_string|
+  sort_columns = sort_columns_string.split(',').map { |sort_column| sort_column.strip }
+  @result = @result.sort_by do |row|
+    sort_columns.map { |sort_column| row[sort_column] }
+  end
+end
+
 Then(/^the result( with date placeholders)? starts with.*$/) do |placeholder, data|
   actual = @result[0..(data.hashes.length - 1)] || []
   expected = data.hashes || []
