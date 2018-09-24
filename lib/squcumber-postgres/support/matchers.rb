@@ -34,10 +34,10 @@ module MatcherHelpers
         #    2 years ago (as year)
         #    => '2015'
         #
-        #    beginning of last month
+        #    beginning of month last month
         #    => '2017-06-01'
         #
-        #    end of last year
+        #    end of month last year
         #    => '2016-12-31'
         #
         #    today (as custom '%Y-%m')
@@ -126,7 +126,6 @@ module MatcherHelpers
 
       formatted_new_value = case format
         when nil
-          puts "NO FORMAT"
           modified_new_value.to_s
         when 'day', 'month', 'year'
           modified_new_value.send(format.to_sym)
@@ -137,9 +136,9 @@ module MatcherHelpers
           raise "Invalid date format provided: #{format}"
       end
 
-      formatted_new_value
+      formatted_new_value.to_s
     else
-      new_value
+      new_value.to_s
     end
   end
 end

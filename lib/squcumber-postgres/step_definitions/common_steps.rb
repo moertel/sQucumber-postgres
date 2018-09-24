@@ -82,19 +82,30 @@ end
 
 When(/^the given SQL files are executed$/) do
   silence_streams(STDERR) do
-    @sql_files_to_execute.each { |file| TESTING_DATABASE.exec_file(file) }
+    @sql_files_to_execute.each do |file|
+      # This overwrites the result if multiple files are executed
+      @result = TESTING_DATABASE.exec_file(file)
+    end
   end
 end
 
 When(/^the SQL file "?([^\s"]+)"? is executed/) do |file|
   silence_streams(STDERR) do
-    TESTING_DATABASE.exec_file("#{@sql_file_path}/#{file}")
+    # This overwrites the result if multiple files are executed
+    @result = TESTING_DATABASE.exec_file("#{@sql_file_path}/#{file}")
   end
 end
 
 When(/^the resulting table "?([^\s"]*)"? is queried(?:, ordered by "?([^"]*)"?)?/) do |table, sort_column|
   sort_statement = (sort_column.nil? or sort_column.empty?) ? '' : "order by #{sort_column}"
   @result = TESTING_DATABASE.query("select * from #{table} #{sort_statement};").map { |e| e }
+end
+
+When(/^the result is ordered by "?([^"]+)"?/) do |sort_columns_string|
+  sort_columns = sort_columns_string.split(',').map { |sort_column| sort_column.strip }
+  @result = @result.sort_by do |row|
+    sort_columns.map { |sort_column| row[sort_column] }
+  end
 end
 
 Then(/^the result( with date placeholders)? starts with.*$/) do |placeholder, data|
