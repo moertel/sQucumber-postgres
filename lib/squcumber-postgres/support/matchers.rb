@@ -19,6 +19,7 @@ module MatcherHelpers
   end
 
   def timetravel(date, i, method); i > 0 ? timetravel(date.send(method.to_sym), i - 1, method) : date; end
+  def monthtravel(date, i); i != 0 ? Date.new(date.year, date.month + i, -1) : date; end
 
   def convert_mock_values(mock_data)
     mock_data.map do |entry|
@@ -65,16 +66,16 @@ module MatcherHelpers
       when /tomorrow/
         timetravel(Date.today, 1, :next_day)
       when /last month/
-        timetravel(Date.today, 1, :prev_month)
+        monthtravel(Date.today, -1)
       when /next month/
-        timetravel(Date.today, 1, :next_month)
+        monthtravel(Date.today, 1)
       when /last year/
         timetravel(Date.today, 1, :prev_year)
       when /next year/
         timetravel(Date.today, 1, :next_year)
       when /\s*\d+\s+month(s)?\s+ago\s*?/
         number_of_months = value.match(/\d+/)[0].to_i
-        timetravel(Date.today, number_of_months, :prev_month)
+        monthtravel(Date.today, number_of_months * -1)
       when /\s*\d+\s+day(s)?\s+ago\s*/
         number_of_days = value.match(/\d+/)[0].to_i
         timetravel(Date.today, number_of_days, :prev_day)
