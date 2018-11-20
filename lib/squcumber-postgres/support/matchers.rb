@@ -138,7 +138,7 @@ module MatcherHelpers
 
       formatted_new_value.to_s
     else
-      new_value.to_s
+      value
     end
   end
 end
