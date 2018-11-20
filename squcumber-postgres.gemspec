@@ -1,13 +1,13 @@
 Gem::Specification.new do |s|
   s.name               = 'squcumber-postgres'
-  s.version            = '0.0.8'
+  s.version            = '0.0.9'
   s.default_executable = 'squcumber-postgres'
 
   s.licenses = ['MIT']
   s.required_ruby_version = '>= 2.0'
   s.required_rubygems_version = Gem::Requirement.new('>= 0') if s.respond_to? :required_rubygems_version=
   s.authors = ['Stefanie Grunwald']
-  s.date = %q{2018-09-25}
+  s.date = %q{2018-11-20}
   s.email = %q{steffi@physics.org}
   s.files = [
     'Rakefile',
