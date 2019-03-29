@@ -44,6 +44,36 @@ module Squcumber
       end
 
       context 'with month placeholders' do
+        context 'during a leap year' do
+          it 'sets last month' do
+            allow(Date).to receive(:today).and_return Date.new(2019, 3, 29)
+            expect(dummy_class.new.convert_mock_value('last month')).to eql('2019-02-28')
+          end
+          it 'sets next month' do
+            allow(Date).to receive(:today).and_return Date.new(2019, 1, 29)
+            expect(dummy_class.new.convert_mock_value('next month')).to eql('2019-02-28')
+          end
+        end
+
+        context 'when the length of months differ' do
+          it 'travels into the past and keeps the day' do
+            allow(Date).to receive(:today).and_return Date.new(2019, 3, 31)
+            expect(dummy_class.new.convert_mock_value('2 month ago')).to eql('2019-01-31')
+          end
+          it 'travels into the future and keeps the day' do
+            allow(Date).to receive(:today).and_return Date.new(2019, 1, 31)
+            expect(dummy_class.new.convert_mock_value('2 months from now')).to eql('2019-03-31')
+          end
+          it 'sets beginning of month' do
+            allow(Date).to receive(:today).and_return Date.new(2019, 1, 31)
+            expect(dummy_class.new.convert_mock_value('beginning of month 9 months from now')).to eql('2019-10-01')
+          end
+          it 'sets end of month' do
+            allow(Date).to receive(:today).and_return Date.new(2019, 1, 31)
+            expect(dummy_class.new.convert_mock_value('end of month 9 months from now')).to eql('2019-10-31')
+          end
+        end
+
         it 'sets last month' do
           expect(dummy_class.new.convert_mock_value('last month')).to eql('2017-06-15')
         end
