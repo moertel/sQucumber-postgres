@@ -18,8 +18,6 @@ module MatcherHelpers
     end
   end
 
-  def timetravel(date, i, method); i > 0 ? timetravel(date.send(method.to_sym), i - 1, method) : date; end
-
   def convert_mock_values(mock_data)
     mock_data.map do |entry|
       entry.each do |key, value|
@@ -61,35 +59,35 @@ module MatcherHelpers
       when /today/
         Date.today
       when /yesterday/
-        timetravel(Date.today, 1, :prev_day)
+        Date.today.prev_day
       when /tomorrow/
-        timetravel(Date.today, 1, :next_day)
+        Date.today.next_day
       when /last month/
-        timetravel(Date.today, 1, :prev_month)
+        Date.today.prev_month
       when /next month/
-        timetravel(Date.today, 1, :next_month)
+        Date.today.next_month
       when /last year/
-        timetravel(Date.today, 1, :prev_year)
+        Date.today.prev_year
       when /next year/
-        timetravel(Date.today, 1, :next_year)
+        Date.today.next_year
       when /\s*\d+\s+month(s)?\s+ago\s*?/
         number_of_months = value.match(/\d+/)[0].to_i
-        timetravel(Date.today, number_of_months, :prev_month)
+        Date.today.prev_month(number_of_months)
       when /\s*\d+\s+day(s)?\s+ago\s*/
         number_of_days = value.match(/\d+/)[0].to_i
-        timetravel(Date.today, number_of_days, :prev_day)
+        Date.today.prev_day(number_of_days)
       when /\s*\d+\s+year(s)?\s+ago\s*/
         number_of_years = value.match(/\d+/)[0].to_i
-        timetravel(Date.today, number_of_years, :prev_year)
+        Date.today.prev_year(number_of_years)
       when /\s*\d+\s+month(s)?\s+from now\s*?/
         number_of_months = value.match(/\d+/)[0].to_i
-        timetravel(Date.today, number_of_months, :next_month)
+        Date.today.next_month(number_of_months)
       when /\s*\d+\s+day(s)?\s+from now\s*/
         number_of_days = value.match(/\d+/)[0].to_i
-        timetravel(Date.today, number_of_days, :next_day)
+        Date.today.next_day(number_of_days)
       when /\s*\d+\s+year(s)?\s+from now\s*/
         number_of_years = value.match(/\d+/)[0].to_i
-        timetravel(Date.today, number_of_years, :next_year)
+        Date.today.next_year(number_of_years)
       else
         placeholder
     end
