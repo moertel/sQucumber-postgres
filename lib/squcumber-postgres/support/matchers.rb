@@ -6,6 +6,10 @@ module MatcherHelpers
       actual.match(/#{Regexp.quote((Date.today - 1).to_s)}/)
     elsif expected.eql?('any_date')
       actual.match(/^\d{4}\-\d{2}\-\d{2} \d{2}:\d{2}:\d{2}$/)
+    elsif expected.eql?('sometime today')
+      actual.match(/^#{Regexp.quote(Date.today.to_s)} \d{2}:\d{2}:\d{2}$/)
+    elsif expected.eql?('sometime yesterday')
+      actual.match(/^#{Regexp.quote((Date.today - 1).to_s)} \d{2}:\d{2}:\d{2}$/)
     elsif expected.eql?('any_string')
       true if actual.is_a?(String) or actual.nil?
     elsif expected.eql?('false') or expected.eql?('true')
