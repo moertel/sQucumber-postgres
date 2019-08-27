@@ -113,6 +113,8 @@ Then(/^the result( with date placeholders)? starts with.*$/) do |placeholder, da
   expected = data.hashes || []
   expected = convert_mock_values(expected) if placeholder
 
+  sanity_check_result(actual, expected)
+
   expected.each_with_index do |hash, i|
     raise("Does not start with expected result, got:\n#{format_error(data, actual)}") unless actual[i].all? do |key, value|
       values_match(value, hash[key]) # actual,expected
@@ -125,10 +127,12 @@ Then(/^the result( with date placeholders)? includes.*$/) do |placeholder, data|
   expected = data.hashes || []
   expected = convert_mock_values(expected) if placeholder
 
+  sanity_check_result(actual, expected)
+
   expected.each do |hash|
     raise("Result is not included, got:\n#{format_error(data, actual)}") unless actual.any? do |row|
       row.all? do |key, value|
-        values_match(value, hash[key]) # actual,expected
+        values_match(value, hash[key]) # actual, expected
       end
     end
   end
@@ -138,6 +142,8 @@ Then(/^the result( with date placeholders)? does not include.*$/) do |placeholde
   actual = @result || []
   expected = data.hashes || []
   expected = convert_mock_values(expected) if placeholder
+
+  sanity_check_result(actual, expected)
 
   expected.each do |hash|
     raise("Result is included, got:\n#{format_error(data, actual)}") if actual.any? do |row|
@@ -152,6 +158,8 @@ Then(/^the result( with date placeholders)? exactly matches.*$/) do |placeholder
   actual = @result || []
   expected = data.hashes || []
   expected = convert_mock_values(expected) if placeholder
+
+  sanity_check_result(actual, expected)
 
   raise("Does not match exactly, got:\n#{format_error(data, actual)}") if actual.length != expected.length
 
