@@ -1,4 +1,15 @@
 module MatcherHelpers
+  def sanity_check_result(actual, expected)
+    raise("The returned result is empty") if actual.empty?
+    raise("No data provided for comparison") if expected.empty?
+
+    expected[0].keys.each do |expected_key|
+      unless actual[0].keys.include?(expected_key)
+        raise("Column name '#{expected_key}' does not exist in result.\nAvailable column names are #{actual[0].keys.join(', ')}")
+      end
+    end
+  end
+
   def values_match(actual, expected)
     if expected.eql?('today')
       actual.match(/#{Regexp.quote(Date.today.to_s)}/)
