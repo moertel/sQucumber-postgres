@@ -36,7 +36,7 @@ module Squcumber
 
         def truncate_all_tables
           @testing_database
-            .exec("select schemaname || '.' || tablename as schema_and_table from pg_tables where tableowner = '#{ENV['DB_USER']}'")
+            .exec("select schemaname || '.' || tablename as schema_and_table from pg_tables where tableowner = '#{ENV['DB_USER']}' and schemaname not in ('pg_catalog', 'information_schema')")
             .map { |row| row['schema_and_table'] }
             .each { |schema_and_table| exec("truncate table #{schema_and_table}") }
         end
