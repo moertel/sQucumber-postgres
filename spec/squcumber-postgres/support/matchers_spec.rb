@@ -7,6 +7,24 @@ module Squcumber
 
     before(:each) do
       allow(Date).to receive(:today).and_return Date.new(2017, 7, 15)
+      allow(DateTime).to receive(:now).and_return DateTime.new(2017, 7, 15, 10, 20, 30)
+    end
+
+    describe '#convert_mock_values' do
+      context 'with minute placeholders' do
+        it 'sets minutes in the future' do
+          expect(dummy_class.new.convert_mock_value('10 minutes from now')).to eql('2017-07-15T10:30:30+00:00')
+        end
+        it 'sets minutes in the past' do
+          expect(dummy_class.new.convert_mock_value('10 minutes ago')).to eql('2017-07-15T10:10:30+00:00')
+        end
+        it 'sets hours in the future' do
+          expect(dummy_class.new.convert_mock_value('9 hours from now')).to eql('2017-07-15T19:20:30+00:00')
+        end
+        it 'sets hours in the past' do
+          expect(dummy_class.new.convert_mock_value('9 hours ago')).to eql('2017-07-15T01:20:30+00:00')
+        end
+      end
     end
 
     describe '#convert_mock_values' do

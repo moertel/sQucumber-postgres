@@ -85,6 +85,12 @@ module MatcherHelpers
         Date.today.prev_year
       when /next year/
         Date.today.next_year
+      when /\s*\d+\s+minute(s)?\s+ago\s*?/
+        number_of_minutes = value.match(/\d+/)[0].to_i
+        DateTime.now - (number_of_minutes/24.0/60.0)
+      when /\s*\d+\s+hours(s)?\s+ago\s*?/
+        number_of_hours = value.match(/\d+/)[0].to_i
+        DateTime.now - (number_of_hours/24.0)
       when /\s*\d+\s+month(s)?\s+ago\s*?/
         number_of_months = value.match(/\d+/)[0].to_i
         Date.today.prev_month(number_of_months)
@@ -94,6 +100,12 @@ module MatcherHelpers
       when /\s*\d+\s+year(s)?\s+ago\s*/
         number_of_years = value.match(/\d+/)[0].to_i
         Date.today.prev_year(number_of_years)
+      when /\s*\d+\s+minute(s)?\s+from now\s*?/
+        number_of_minutes = value.match(/\d+/)[0].to_i
+        DateTime.now + (number_of_minutes/24.0/60.0)
+      when /\s*\d+\s+hours(s)?\s+from now\s*?/
+        number_of_hours = value.match(/\d+/)[0].to_i
+        DateTime.now + (number_of_hours/24.0)
       when /\s*\d+\s+month(s)?\s+from now\s*?/
         number_of_months = value.match(/\d+/)[0].to_i
         Date.today.next_month(number_of_months)

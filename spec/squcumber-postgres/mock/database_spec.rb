@@ -182,7 +182,7 @@ module Squcumber::Postgres::Mock
       end
 
       it 'asks the testing database for currently existing tables in production schemas' do
-        expect(testing_database).to have_received(:exec).with(/^\s*select\s+schemaname\s+\|\|\s+'\.'\s+\|\|\s+tablename\s+as schema\_and\_table\s+from\s+pg_tables\s+where\s+tableowner\s*=\s*'some_user'\s*;?\s*$/)
+        expect(testing_database).to have_received(:exec).with(/^\s*select\s+schemaname\s+\|\|\s+'\.'\s+\|\|\s+tablename\s+as schema\_and\_table\s+from\s+pg_tables\s+where\s+tableowner\s*=\s*'some_user'\s+and\s+schemaname\s+not\s+in\s+\('pg_catalog',\s+'information_schema'\s*\)\s*;?\s*$/)
       end
 
       it 'truncates the returned tables in the testing database' do

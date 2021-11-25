@@ -1,4 +1,4 @@
-FROM ruby:2.3.0 as builder
+FROM ruby:2.5.0 as builder
 COPY ./lib lib
 COPY ./spec spec
 COPY ./Rakefile .
@@ -6,7 +6,7 @@ COPY ./Gemfile .
 COPY ./squcumber-postgres.gemspec .
 RUN gem build squcumber-postgres.gemspec
 
-FROM ruby:2.3.0
+FROM ruby:2.5.0
 ENV CUSTOM_STEPS_DIR /custom_step_definitions
 VOLUME /custom_step_definitions
 VOLUME /features
