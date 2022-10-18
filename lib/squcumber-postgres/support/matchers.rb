@@ -48,6 +48,8 @@ module MatcherHelpers
       value
     elsif value.eql?(null)
       nil
+    else
+      value
     end
   end
 
