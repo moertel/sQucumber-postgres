@@ -38,7 +38,7 @@ module MatcherHelpers
   def convert_null_values(mock_data, null)
     mock_data.map do |entry|
       entry.each do |key, value|
-        entry[key] = convert_null_value(value)
+        entry[key] = convert_null_value(value, null)
       end
     end
   end
