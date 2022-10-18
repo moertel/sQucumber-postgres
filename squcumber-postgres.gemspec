@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name               = 'squcumber-postgres'
-  s.version            = '0.1.4'
+  s.version            = '0.1.5'
   s.default_executable = 'squcumber-postgres'
 
   s.licenses = ['MIT']
