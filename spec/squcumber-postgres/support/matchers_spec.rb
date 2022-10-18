@@ -10,6 +10,53 @@ module Squcumber
       allow(DateTime).to receive(:now).and_return DateTime.new(2017, 7, 15, 10, 20, 30)
     end
 
+    describe '#convert_null_values' do
+      context 'when no mapping is defined' do
+        it 'leaves the original value as it is' do
+          expect(dummy_class.new.convert_null_value('some_value', nil)).to eql('some_value')
+        end
+      end
+      context 'when a mapping is defined' do
+        it 'maps the value to nil' do
+          expect(dummy_class.new.convert_null_value('some_value', 'some_value')).to eql(nil)
+        end
+      end
+    end
+
+    describe '#values_match' do
+      context 'when no null mapping is defined' do
+        it 'always matches if there was no expectation' do
+          actual = 'some_value'
+          expected = nil
+          expect(dummy_class.new.values_match(actual, expected)).to eql(true)
+        end
+        it 'never matches if the actual value is null' do
+          actual = nil
+          expected = 'some_value'
+          expect(dummy_class.new.values_match(actual, expected)).to eql(false)
+        end
+      end
+      context 'when some null mapping is defined' do
+        it 'always matches if there was no expectation' do
+          actual = 'some_value'
+          expected = nil
+          expect(dummy_class.new.values_match(actual, expected, null='whatever')).to eql(true)
+        end
+        it 'matches the set null placeholder' do
+          actual = nil
+          expected = 'some_value'
+          null = 'some_value'
+          expect(dummy_class.new.values_match(actual, expected, null=null)).to eql(true)
+        end
+        it 'does not match if the null placeholder does not match' do
+          actual = nil
+          expected = 'some_value'
+          null = 'some_other_value'
+          expect(dummy_class.new.values_match(actual, expected, null)).to eql(false)
+        end
+      end
+    end
+
     describe '#convert_mock_values' do
       context 'with minute placeholders' do
         it 'sets minutes in the future' do
