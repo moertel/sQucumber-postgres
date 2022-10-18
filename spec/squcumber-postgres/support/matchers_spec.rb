@@ -61,6 +61,12 @@ module Squcumber
           null = 'some_other_value'
           expect(dummy_class.new.values_match(actual, expected, null)).to eql(false)
         end
+        it 'matches if the null placeholder does not match but the values do' do
+          actual = 'some_value'
+          expected = 'some_value'
+          null = 'some_other_value'
+          expect(dummy_class.new.values_match(actual, expected, null)).to eql(true)
+        end
       end
     end
 

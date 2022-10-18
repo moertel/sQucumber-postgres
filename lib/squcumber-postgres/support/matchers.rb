@@ -21,8 +21,8 @@ module MatcherHelpers
       actual.match(/^#{Regexp.quote(Date.today.to_s)} \d{2}:\d{2}:\d{2}$/)
     elsif expected.eql?('sometime yesterday')
       actual.match(/^#{Regexp.quote((Date.today - 1).to_s)} \d{2}:\d{2}:\d{2}$/)
-    elsif !null.nil? and !expected.nil?
-      expected.eql?(null) and actual.nil?
+    elsif !null.nil? and !expected.nil? and expected.eql?(null)
+      actual.nil?
     elsif expected.eql?('any_string')
       true if actual.is_a?(String) or actual.nil?
     elsif expected.eql?('false') or expected.eql?('true')
