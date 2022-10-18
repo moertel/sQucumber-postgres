@@ -17,8 +17,15 @@ module Squcumber
         end
       end
       context 'when a mapping is defined' do
-        it 'maps the value to nil' do
-          expect(dummy_class.new.convert_null_value('some_value', 'some_value')).to eql(nil)
+        context 'and the value matches the mapper' do
+          it 'maps the value to nil' do
+            expect(dummy_class.new.convert_null_value('some_value', 'some_value')).to eql(nil)
+          end
+        end
+        context 'and the value does not match the mapper' do
+          it 'maps the value to itself' do
+            expect(dummy_class.new.convert_null_value('some_value', 'some_other_value')).to eql('some_value')
+          end
         end
       end
     end
