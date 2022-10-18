@@ -77,8 +77,8 @@ Given(/^the existing table "?([a-zA-Z0-9_]+)\.([a-zA-Z0-9_]+)"?( with date place
     mock_data.map! { |entry| defaults.merge(entry) }
   end
 
-  mock_data = convert_null_values(mock_data, @null) if @null
   mock_data = convert_mock_values(mock_data) if placeholder
+  mock_data = convert_null_values(mock_data, @null) if @null
 
   TESTING_DATABASE.mock(
     Hash["#{schema}.#{table}", mock_data]
@@ -116,8 +116,8 @@ end
 Then(/^the result( with date placeholders)? starts with.*$/) do |placeholder, data|
   actual = @result[0..(data.hashes.length - 1)] || []
   expected = data.hashes || []
-  expected = convert_null_values(expected, @null) if @null
   expected = convert_mock_values(expected) if placeholder
+  expected = convert_null_values(expected, @null) if @null
 
   sanity_check_result(actual, expected)
 
@@ -131,8 +131,8 @@ end
 Then(/^the result( with date placeholders)? includes.*$/) do |placeholder, data|
   actual = @result || []
   expected = data.hashes || []
-  expected = convert_null_values(expected, @null) if @null
   expected = convert_mock_values(expected) if placeholder
+  expected = convert_null_values(expected, @null) if @null
 
   sanity_check_result(actual, expected)
 
@@ -148,8 +148,8 @@ end
 Then(/^the result( with date placeholders)? does not include.*$/) do |placeholder, data|
   actual = @result || []
   expected = data.hashes || []
-  expected = convert_null_values(expected, @null) if @null
   expected = convert_mock_values(expected) if placeholder
+  expected = convert_null_values(expected, @null) if @null
 
   sanity_check_result(actual, expected)
 
@@ -165,8 +165,8 @@ end
 Then(/^the result( with date placeholders)? exactly matches.*$/) do |placeholder, data|
   actual = @result || []
   expected = data.hashes || []
-  expected = convert_null_values(expected, @null) if @null
   expected = convert_mock_values(expected) if placeholder
+  expected = convert_null_values(expected, @null) if @null
 
   sanity_check_result(actual, expected)
 
