@@ -10,7 +10,7 @@ module MatcherHelpers
     end
   end
 
-  def values_match(actual, expected)
+  def values_match(actual, expected, null=nil)
     if expected.eql?('today')
       actual.match(/#{Regexp.quote(Date.today.to_s)}/)
     elsif expected.eql?('yesterday')
@@ -21,6 +21,8 @@ module MatcherHelpers
       actual.match(/^#{Regexp.quote(Date.today.to_s)} \d{2}:\d{2}:\d{2}$/)
     elsif expected.eql?('sometime yesterday')
       actual.match(/^#{Regexp.quote((Date.today - 1).to_s)} \d{2}:\d{2}:\d{2}$/)
+    elsif !null.nil? and !expected.nil?
+      expected.eql?(null) and actual.nil?
     elsif expected.eql?('any_string')
       true if actual.is_a?(String) or actual.nil?
     elsif expected.eql?('false') or expected.eql?('true')
@@ -30,6 +32,22 @@ module MatcherHelpers
       actual.eql?(expected)
     else  # we have not mocked this, so ignore it
       true
+    end
+  end
+
+  def convert_null_values(mock_data, null)
+    mock_data.map do |entry|
+      entry.each do |key, value|
+        entry[key] = convert_null_value(value)
+      end
+    end
+  end
+
+  def convert_null_value(value, null)
+    if null.nil?
+      value
+    elsif value.eql?(null)
+      nil
     end
   end
 
